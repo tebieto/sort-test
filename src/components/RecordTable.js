@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { useState, useEffect } from 'react';
 import {PropTypes} from 'prop-types';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -7,10 +7,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
-class RecordTable extends Component {
-    constructor() {
-        super();
-        this.people = [
+const RecordTable = ({ state }) => {
+        
+    const list = [
             {
                 name: "Veronica Mize",
                 dob: "11/29/2011"
@@ -37,9 +36,28 @@ class RecordTable extends Component {
                 dob: "10/31/1999"
             }
         ];
-    }
 
-    render() {
+        const [people, setPeople] = useState(list);
+
+        useEffect(() => {
+            const { sortByAge, sortByName } = state;
+            sortByAge ? handleSortByAge(list) : sortByName ? handleSortByName(list) : setPeople(list);
+        }, [state]);
+
+        const handleSortByAge = data => {
+            let sorted = data.sort((a,b) => a.dob > b.dob ? 1 : -1);
+            handleSorted(sorted)
+        }
+
+        const handleSortByName = data => {
+            let sorted = data.sort((a,b) => a.name > b.name ? 1 : -1)
+            handleSorted(sorted);
+        }
+
+        const handleSorted = sorted => {
+            setPeople(sorted);
+        }
+    
         return (
             <Paper className="width">
                 <Table>
@@ -50,15 +68,18 @@ class RecordTable extends Component {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                                <TableRow>
-                                    <TableCell>Insert Name</TableCell>
-                                    <TableCell>Insert DOB</TableCell>
+                        {
+                            people.map((item, index) => (
+                                <TableRow key={index}>
+                                    <TableCell>{item.name}</TableCell>
+                                    <TableCell>{item.dob}</TableCell>
                                 </TableRow>
+                            ))
+                        }
                     </TableBody>
                 </Table>
             </Paper>
         );
-    }
 }
 
 export default RecordTable;

@@ -45,12 +45,16 @@ const RecordTable = ({ state }) => {
         }, [state]);
 
         const handleSortByAge = data => {
-            let sorted = data.sort((a,b) => a.dob > b.dob ? 1 : -1);
+            let sorted = data.sort((a,b) =>  {
+                const dobA = a.dob.split('/').reverse().join('/');
+                const dobB = b.dob.split('/').reverse().join('/');
+                return dobA > dobB ? 1 : -1;
+            });
             handleSorted(sorted)
         }
 
         const handleSortByName = data => {
-            let sorted = data.sort((a,b) => a.name > b.name ? 1 : -1)
+            let sorted = data.sort((a,b) => a.name > b.name ? 1 : -1);
             handleSorted(sorted);
         }
 
